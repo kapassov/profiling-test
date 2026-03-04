@@ -19,6 +19,7 @@ dist
 *.pem
 .env
 .env*.local
+requirements.txt
 
 # debug
 npm-debug.log*
