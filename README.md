@@ -48,3 +48,4 @@ npm run dev
 - Zod, react-hook-form, Zustand
 - jspdf + jspdf-autotable для PDF
 # profiling-test
+# nursipat-test
