@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -22,8 +22,7 @@ export default function HomePage() {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
+    control,
     formState: { errors, isValid },
   } = useForm<PreTestFormValues>({
     resolver: zodResolver(preTestFormSchema),
@@ -31,13 +30,10 @@ export default function HomePage() {
     defaultValues: {
       name: "",
       age: undefined as unknown as number,
-      phone: "",
+      phone: "+7 ",
       gender: undefined,
     },
   })
-
-  const phoneValue = watch("phone") ?? ""
-  const genderValue = watch("gender")
 
   const onSubmit = async (data: PreTestFormValues) => {
     const phoneForDb = "+7" + getPhoneDigitsOnly(data.phone)
@@ -104,11 +100,17 @@ export default function HomePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Номер телефона</Label>
-                <PhoneInput
-                  id="phone"
-                  value={phoneValue}
-                  onChange={(v) => setValue("phone", v, { shouldValidate: true })}
-                  className={errors.phone ? "border-red-500" : ""}
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      id="phone"
+                      value={field.value ?? ""}
+                      onChange={(v) => field.onChange(v)}
+                      className={errors.phone ? "border-red-500" : ""}
+                    />
+                  )}
                 />
                 {errors.phone && (
                   <p className="text-sm text-red-600">{errors.phone.message}</p>
@@ -122,12 +124,6 @@ export default function HomePage() {
                     errors.gender ? "border-red-500" : "border-input"
                   }`}
                   {...register("gender")}
-                  value={genderValue ?? ""}
-                  onChange={(e) =>
-                    setValue("gender", e.target.value as PreTestFormValues["gender"], {
-                      shouldValidate: true,
-                    })
-                  }
                 >
                   <option value="">Выберите пол</option>
                   <option value="male">Мужской</option>
