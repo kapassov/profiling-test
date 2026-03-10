@@ -49,3 +49,4 @@ npm run dev
 - jspdf + jspdf-autotable для PDF
 # profiling-test
 # nursipat-test
+# nursipat-test
